@@ -71,5 +71,14 @@ def draw_background():
             30 + y // 4, 
             70 + y // 3
         ) 
-        pygame.draw.line(screen,color, (0,y)(WIDTH,y))
+        pygame.draw.line(screen, color, (0, y), (WIDTH, y))
+
+# Stars 
+for star in stars: 
+    pygame.draw.circle(screen, WHITE, star, 2)
+
+# Clouds 
+for cloud in clouds: 
+    pygame.draw.ellipse(screen, (230,230,230), (cloud[0], cloud[1], 120, 50,))x
+    cloud[0] -= 1 
 

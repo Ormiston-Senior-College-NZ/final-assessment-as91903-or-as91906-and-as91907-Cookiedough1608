@@ -195,3 +195,25 @@ while running:
     for good in good_items:
         good.x -= scroll_speed
 
+# Remove offscreen
+    obstacles = [o for o in obstacles if o.x > -100]
+    bad_items = [b for b in bad_items if b.x > -100]
+    good_items = [g for g in good_items if g.x > -100]
+
+   # Collisions
+    for obstacle in obstacles:
+        if player.colliderect(obstacle):
+            game_over = True
+
+# Bad item collision
+        for bad in bad_items:
+            if player.colliderect(bad):
+                impaired = True
+                impair_timer = 400
+                bad_items.remove(bad)
+
+# Good item collision
+        for good in good_items:
+            if player.colliderect(good):
+                impaired = False
+                good_items.remove(good)

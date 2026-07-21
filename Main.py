@@ -169,6 +169,29 @@ while running:
 
     if not game_over:
 
+ # Background
+        draw_background()
 
+# Gravity
+    player_vel_y += gravity
+    player.y += player_vel_y
 
+ # Ground collision
+    if player.y >= 320:
+         player.y = 320
+         player_vel_y = 0
+        on_ground = True
+
+ # Spawn items
+    spawn_obstacles()
+
+ # Move obstacles
+    for obstacle in obstacles:
+        obstacle.x -= scroll_speed
+
+    for bad in bad_items:
+        bad.x -= scroll_speed
+
+    for good in good_items:
+        good.x -= scroll_speed
 

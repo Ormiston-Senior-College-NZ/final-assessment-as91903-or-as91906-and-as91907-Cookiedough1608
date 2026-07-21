@@ -133,6 +133,42 @@ def spawn_obstacles():
         good = pygame.Rect(WIDTH, 300, 40, 40)
         good_items.append(good)
 
-        
+# Main loop
+running = True
+
+while running:
+
+    clock.tick(FPS)
+
+# Events
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+        if event.type == pygame.KEYDOWN:
+
+            if event.key == pygame.K_SPACE and on_ground:
+
+                if impaired:
+                    player_vel_y = jump_power + 5
+                else:
+                    player_vel_y = jump_power
+
+                on_ground = False
+
+            if event.key == pygame.K_r and game_over:
+                game_over = False
+                score = 0
+                obstacles.clear()
+                bad_items.clear()
+                good_items.clear()
+                player.x = 120
+                player.y = 320
+                impaired = False
+                impair_timer = 0
+
+    if not game_over:
+
+
 
 

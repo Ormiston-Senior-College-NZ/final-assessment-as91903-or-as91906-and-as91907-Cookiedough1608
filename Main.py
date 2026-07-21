@@ -120,5 +120,19 @@ for cloud in clouds:
             (i * 80 - (score % 80), 435, 40, 8)
         )
 
+def spawn_obstacles():
+    if random.randint(1, 70) == 1:
+        obstacle = pygame.Rect(WIDTH, 330, 50, 50)
+        obstacles.append(obstacle)
+
+    if random.randint(1, 200) == 1:
+        bad = pygame.Rect(WIDTH, 300, 40, 40)
+        bad_items.append(bad)
+
+    if random.randint(1, 250) == 1:
+        good = pygame.Rect(WIDTH, 300, 40, 40)
+        good_items.append(good)
+
+        
 
 

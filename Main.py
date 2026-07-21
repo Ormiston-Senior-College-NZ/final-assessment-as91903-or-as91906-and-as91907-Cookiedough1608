@@ -109,4 +109,16 @@ for cloud in clouds:
                     (wx, wy, 10, 15)
                 )
 
+ # Road
+    pygame.draw.rect(screen, ROAD, (0, 380, WIDTH, 120))
+
+    # Road lines
+    for i in range(20):
+        pygame.draw.rect(
+            screen,
+            WHITE,
+            (i * 80 - (score % 80), 435, 40, 8)
+        )
+
+
 

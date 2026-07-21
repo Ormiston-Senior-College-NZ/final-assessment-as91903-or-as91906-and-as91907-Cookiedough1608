@@ -28,7 +28,7 @@ GREEN = (50, 220, 100)
 YELLOW = (225, 220, 50)
 PURPLE = (120, 180, 255)
 SKY = (120, 180, 255)
-ROAD = (45, 45, 45)
+ROAD = (45, 45,  45)
 
 # Player 
 player = pygame.Rect(120, 320, 60, 60)
@@ -79,6 +79,34 @@ for star in stars:
 
 # Clouds 
 for cloud in clouds: 
-    pygame.draw.ellipse(screen, (230,230,230), (cloud[0], cloud[1], 120, 50,))x
+    pygame.draw.ellipse(screen, (230,230,230), (cloud[0], cloud[1], 120, 50,))
     cloud[0] -= 1 
+
+    if cloud[0] < -150:
+            cloud[0] = WIDTH + random.randint(50, 300)
+            cloud[1] = random.randint(20, 150)
+
+    # Buildings
+    for i in range(12):
+        x = i * 120
+        building_height = random.randint(120, 280)
+
+        pygame.draw.rect(
+            screen,
+            (40, 40, 60),
+            (x, HEIGHT - 120 - building_height, 90, building_height)
+        )
+
+   # Windows
+        for row in range(8):
+            for col in range(3):
+                wx = x + 15 + col * 25
+                wy = HEIGHT - 100 - building_height + row * 30
+
+                pygame.draw.rect(
+                    screen,
+                    YELLOW,
+                    (wx, wy, 10, 15)
+                )
+
 

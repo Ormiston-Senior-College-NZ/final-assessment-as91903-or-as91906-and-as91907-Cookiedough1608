@@ -20,15 +20,28 @@ font = pygame.font.SysFont("arial", 40, bold=True)
 big_font = pygame.font.SysFont("arial", 80, bold=True)
 
 # Colors
-WHITE =(255, 255, 255)
-BLACK =(20, 20, 20)
+# Colours
+WHITE = (255, 255, 255)
+BLACK = (20, 20, 20)
+
 BLUE = (50, 120, 255)
 RED = (220, 60, 60)
 GREEN = (50, 220, 100)
-YELLOW = (225, 220, 50)
-PURPLE = (120, 180, 255)
-SKY = (120, 180, 255)
-ROAD = (45, 45,  45)
+YELLOW = (255, 230, 80)
+
+PURPLE = (170, 100, 255)
+
+# Brighter colours
+SKY_TOP = (70, 180, 255)
+SKY_BOTTOM = (180, 230, 255)
+
+ROAD = (70, 70, 70)
+
+BUILDING = (90, 100, 130)
+WINDOW = (255, 240, 120)
+
+GRASS = (70, 180, 70)
+SUN = (255, 220, 70)
 
 # Player 
 player = pygame.Rect(120, 320, 60, 60)
@@ -47,6 +60,10 @@ obstacles = []
 
 # Bad choices 
 bad_items = [] 
+
+# Good choices
+good_items = [] 
+print("good_items exists:", good_items)
 
 # Stars 
 stars = []
@@ -170,7 +187,9 @@ while running:
     if not game_over:
 
  # Background
-        draw_background()
+        screen.fill((0, 170, 255))  
+        pygame.draw.rect(screen, BLUE, player)
+        pygame.draw.rect(screen, ROAD, (0, 380, WIDTH, 120))
 
 # Gravity
     player_vel_y += gravity
@@ -205,18 +224,19 @@ while running:
         if player.colliderect(obstacle):
             game_over = True
 
-# Bad item collision
-        for bad in bad_items:
-            if player.colliderect(bad):
-                impaired = True
-                impair_timer = 400
-                bad_items.remove(bad)
+# Bad items collision
+    for bad in bad_items:  
+        if player.colliderect(bad):
+            impaired = True
+            impair_timer = 400
+            bad_items.remove(bad)
 
 # Good item collision
-        for good in good_items:
-            if player.colliderect(good):
-                impaired = False
-                good_items.remove(good)
+    for good in good_items:
+        if player.colliderect(good):
+            impaired = False
+            good_items.remove(good)
+        
 
 # Impairment timer
         if impaired:
@@ -257,3 +277,5 @@ while running:
 # Good items
         for good in good_items:
             pygame.draw.circle(screen, GREEN, good.center, 20)
+
+

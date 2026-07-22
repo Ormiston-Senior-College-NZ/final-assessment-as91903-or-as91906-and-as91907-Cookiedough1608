@@ -232,3 +232,28 @@ while running:
         if impair_timer <= 0:
             impaired = False
 
+# Draw player
+        player_draw = pygame.Rect(
+            player.x + offset_x,
+            player.y + offset_y,
+            player.width,
+            player.height
+        )
+
+        pygame.draw.rect(screen, BLUE, player_draw, border_radius=12)
+
+# Eyes
+        pygame.draw.circle(screen, WHITE, (player_draw.x + 18, player_draw.y + 18), 6)
+        pygame.draw.circle(screen, WHITE, (player_draw.x + 42, player_draw.y + 18), 6)
+
+ # Obstacles
+        for obstacle in obstacles:
+            pygame.draw.rect(screen, RED, obstacle, border_radius=10)
+
+# Bad items
+        for bad in bad_items:
+            pygame.draw.circle(screen, PURPLE, bad.center, 20)
+
+# Good items
+        for good in good_items:
+            pygame.draw.circle(screen, GREEN, good.center, 20)

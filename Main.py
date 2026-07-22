@@ -180,7 +180,7 @@ while running:
     if player.y >= 320:
          player.y = 320
          player_vel_y = 0
-        on_ground = True
+         on_ground = True 
 
  # Spawn items
     spawn_obstacles()
@@ -217,3 +217,18 @@ while running:
             if player.colliderect(good):
                 impaired = False
                 good_items.remove(good)
+
+# Impairment timer
+        if impaired:
+            impair_timer -= 1
+
+# Screen shake
+            offset_x = random.randint(-5, 5)
+            offset_y = random.randint(-5, 5)
+        else:
+            offset_x = 0
+            offset_y = 0
+
+        if impair_timer <= 0:
+            impaired = False
+

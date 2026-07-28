@@ -295,3 +295,28 @@ while running:
         score += 1
         score_text = font.render(f"Score: {score}", True, WHITE)
         screen.blit(score_text, (20, 20))
+ 
+        if impaired:
+            impaired_text = font.render("IMPAIRED!", True, PURPLE)
+            screen.blit(impaired_text, (WIDTH // 2 - 100, 20))
+
+        else:
+        # Game over screen
+        screen.fill(BLACK)
+ 
+        over_text = big_font.render("GAME OVER", True, RED)
+        screen.blit(over_text, (WIDTH // 2 - over_text.get_width() // 2, HEIGHT // 2 - 100))
+ 
+        score_text = font.render(f"Score: {score}", True, WHITE)
+        screen.blit(score_text, (WIDTH // 2 - score_text.get_width() // 2, HEIGHT // 2))
+ 
+        restart_text = font.render("Press R to Restart", True, WHITE)
+        screen.blit(restart_text, (WIDTH // 2 - restart_text.get_width() // 2, HEIGHT // 2 + 60))
+ 
+    pygame.display.flip()
+ 
+pygame.quit()
+ 
+
+
+ 

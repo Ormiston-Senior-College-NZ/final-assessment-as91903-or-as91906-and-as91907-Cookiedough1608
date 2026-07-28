@@ -1,25 +1,24 @@
-import pygame 
-import random 
-import math 
+import pygame
+import random
+import math
 
-# Initialize 
+# Initialize
 pygame.init()
 
-# Screen 
+# Screen
 WIDTH = 1000
-HEIGHT = 500 
+HEIGHT = 500
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Party Run")
 
-# Clock 
+# Clock
 clock = pygame.time.Clock()
-FPS = 60 
+FPS = 60
 
-# Fonts 
-font = pygame.font.SysFont("arial", 40, bold=True) 
+# Fonts
+font = pygame.font.SysFont("arial", 40, bold=True)
 big_font = pygame.font.SysFont("arial", 80, bold=True)
 
-# Colors
 # Colours
 WHITE = (255, 255, 255)
 BLACK = (20, 20, 20)
@@ -43,99 +42,93 @@ WINDOW = (255, 240, 120)
 GRASS = (70, 180, 70)
 SUN = (255, 220, 70)
 
-# Player 
+# Player
 player = pygame.Rect(120, 320, 60, 60)
-player_vel_y = 0 
-gravity = 1 
+player_vel_y = 0
+gravity = 1
 jump_power = -18
-on_ground = True 
+on_ground = True
 
 # Game variables
-scroll_speed = 8 
+scroll_speed = 8
 score = 0
-game_over = False 
+game_over = False
 
-# Obstacles 
+# Obstacles
 obstacles = []
 
-# Bad choices 
-bad_items = [] 
+# Bad choices
+bad_items = []
 
 # Good choices
-good_items = [] 
-print("good_items exists:", good_items)
+good_items = []
 
-# Stars 
+# Stars
 stars = []
-for i in range(80): 
-    stars.append([random.randint(0, WIDTH), random.randint(0,HEIGHT)])
+for i in range(80):
+    stars.append([random.randint(0, WIDTH), random.randint(0, HEIGHT)])
 
-# Clouds 
+# Clouds
 clouds = []
-for i in range(6): 
+for i in range(6):
     clouds.append([random.randint(0, WIDTH), random.randint(20, 150)])
 
-# Impairment system 
-impaired = False 
-impair_timer = 0 
+# Impairment system
+impaired = False
+impair_timer = 0
 
-# Functions 
+
+# Functions
 def draw_background():
-    # Sky gradient 
-    for y in range(HEIGHT): 
-        color = ( 
-            30, 
-            30 + y // 4, 
-            70 + y // 3
-        ) 
-        pygame.draw.line(screen, color, (0, y), (WIDTH, y))
+    # Sky gradient
+    for y in range(HEIGHT):
+        r = SKY_TOP[0] + (SKY_BOTTOM[0] - SKY_TOP[0]) * y // HEIGHT
+        g = SKY_TOP[1] + (SKY_BOTTOM[1] - SKY_TOP[1]) * y // HEIGHT
+        b = SKY_TOP[2] + (SKY_BOTTOM[2] - SKY_TOP[2]) * y // HEIGHT
+        pygame.draw.line(screen, (r, g, b), (0, y), (WIDTH, y))
 
-# Stars 
-for star in stars: 
-    pygame.draw.circle(screen, WHITE, star, 2)
+    # Sun
+    pygame.draw.circle(screen, SUN, (850, 90), 45)
 
-# Clouds 
-for cloud in clouds: 
-    pygame.draw.ellipse(screen, (230,230,230), (cloud[0], cloud[1], 120, 50,))
-    cloud[0] -= 1 
+    # Stars (only at top)
+    for star in stars:
+        pygame.draw.circle(screen, WHITE, star, 2)
 
-    if cloud[0] < -150:
+    # Clouds
+    for cloud in clouds:
+        pygame.draw.ellipse(screen, (250, 250, 250), (cloud[0], cloud[1], 120, 50))
+        pygame.draw.ellipse(screen, (250, 250, 250), (cloud[0] + 20, cloud[1] - 10, 70, 40))
+
+        cloud[0] -= 1
+        if cloud[0] < -140:
             cloud[0] = WIDTH + random.randint(50, 300)
-            cloud[1] = random.randint(20, 150)
+            cloud[1] = random.randint(20, 140)
 
     # Buildings
+    random.seed(1)
     for i in range(12):
-        x = i * 120
-        building_height = random.randint(120, 280)
+        x = i * 100
+        building_height = random.randint(120, 260)
 
-        pygame.draw.rect(
-            screen,
-            (40, 40, 60),
-            (x, HEIGHT - 120 - building_height, 90, building_height)
-        )
+        pygame.draw.rect(screen, BUILDING, (x, HEIGHT - 120 - building_height, 80, building_height))
 
-   # Windows
+        # Windows
         for row in range(8):
             for col in range(3):
-                wx = x + 15 + col * 25
-                wy = HEIGHT - 100 - building_height + row * 30
+                wx = x + 12 + col * 22
+                wy = HEIGHT - 105 - building_height + row * 28
+                pygame.draw.rect(screen, WINDOW, (wx, wy, 10, 14))
 
-                pygame.draw.rect(
-                    screen,
-                    YELLOW,
-                    (wx, wy, 10, 15)
-                )
+    # Grass
+    pygame.draw.rect(screen, GRASS, (0, 360, WIDTH, 20))
 
- # Road
+    # Road
     pygame.draw.rect(screen, ROAD, (0, 380, WIDTH, 120))
 
     # Road lines
-    for i in range(20):
-        pygame.draw.rect(
-            screen,
-            WHITE,
-            (i * 80 - (score % 80), 435, 40, 8)
-        )
+    for i in range(18):
+        pygame.draw.rect(screen, WHITE, (i * 80 - (score % 80), 435, 45, 8))
+
 
 def spawn_obstacles():
     if random.randint(1, 70) == 1:
@@ -150,6 +143,7 @@ def spawn_obstacles():
         good = pygame.Rect(WIDTH, 300, 40, 40)
         good_items.append(good)
 
+
 # Main loop
 running = True
 
@@ -157,7 +151,7 @@ while running:
 
     clock.tick(FPS)
 
-# Events
+    # Events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -165,12 +159,10 @@ while running:
         if event.type == pygame.KEYDOWN:
 
             if event.key == pygame.K_SPACE and on_ground:
-
                 if impaired:
                     player_vel_y = jump_power + 5
                 else:
                     player_vel_y = jump_power
-
                 on_ground = False
 
             if event.key == pygame.K_r and game_over:
@@ -181,68 +173,67 @@ while running:
                 good_items.clear()
                 player.x = 120
                 player.y = 320
+                player_vel_y = 0
+                on_ground = True
                 impaired = False
                 impair_timer = 0
 
     if not game_over:
 
- # Background
-        screen.fill((0, 170, 255))  
-        pygame.draw.rect(screen, BLUE, player)
-        pygame.draw.rect(screen, ROAD, (0, 380, WIDTH, 120))
+        # Background
+        draw_background()
 
-# Gravity
-    player_vel_y += gravity
-    player.y += player_vel_y
+        # Gravity
+        player_vel_y += gravity
+        player.y += player_vel_y
 
- # Ground collision
-    if player.y >= 320:
-         player.y = 320
-         player_vel_y = 0
-         on_ground = True 
+        # Ground collision
+        if player.y >= 320:
+            player.y = 320
+            player_vel_y = 0
+            on_ground = True
 
- # Spawn items
-    spawn_obstacles()
+        # Spawn items
+        spawn_obstacles()
 
- # Move obstacles
-    for obstacle in obstacles:
-        obstacle.x -= scroll_speed
+        # Move obstacles
+        for obstacle in obstacles:
+            obstacle.x -= scroll_speed
 
-    for bad in bad_items:
-        bad.x -= scroll_speed
+        for bad in bad_items:
+            bad.x -= scroll_speed
 
-    for good in good_items:
-        good.x -= scroll_speed
+        for good in good_items:
+            good.x -= scroll_speed
 
-# Remove offscreen
-    obstacles = [o for o in obstacles if o.x > -100]
-    bad_items = [b for b in bad_items if b.x > -100]
-    good_items = [g for g in good_items if g.x > -100]
+        # Remove offscreen
+        obstacles = [o for o in obstacles if o.x > -100]
+        bad_items = [b for b in bad_items if b.x > -100]
+        good_items = [g for g in good_items if g.x > -100]
 
-   # Collisions
-    for obstacle in obstacles:
-        if player.colliderect(obstacle):
-            game_over = True
+        # Collisions
+        for obstacle in obstacles:
+            if player.colliderect(obstacle):
+                game_over = True
 
-# Bad items collision
-    for bad in bad_items:  
-        if player.colliderect(bad):
-            impaired = True
-            impair_timer = 400
-            bad_items.remove(bad)
+        # Bad items collision
+        for bad in bad_items[:]:
+            if player.colliderect(bad):
+                impaired = True
+                impair_timer = 400
+                bad_items.remove(bad)
 
-# Good item collision
-    for good in good_items:
-        if player.colliderect(good):
-            impaired = False
-            good_items.remove(good)
-        
+        # Good item collision
+        for good in good_items[:]:
+            if player.colliderect(good):
+                impaired = False
+                impair_timer = 0
+                good_items.remove(good)
 
-# Impairment timer
+        # Impairment timer
         if impaired:
             impair_timer -= 1
-
-# Screen shake
+            # Screen shake
             offset_x = random.randint(-5, 5)
             offset_y = random.randint(-5, 5)
         else:
@@ -252,7 +243,7 @@ while running:
         if impair_timer <= 0:
             impaired = False
 
-# Draw player
+        # Draw player
         player_draw = pygame.Rect(
             player.x + offset_x,
             player.y + offset_y,
@@ -260,22 +251,47 @@ while running:
             player.height
         )
 
-        pygame.draw.rect(screen, BLUE, player_draw, border_radius=12)
+        pygame.draw.rect(screen, BLUE, player_draw, border_radius=15)
 
-# Eyes
+        # Head
+        pygame.draw.circle(
+            screen,
+            (255, 220, 180),
+            (player_draw.centerx, player_draw.y + 18),
+            14
+        )
+
+        # Body
+        pygame.draw.rect(
+            screen,
+            BLUE,
+            (player_draw.x + 15, player_draw.y + 30, 30, 25),
+            border_radius=8
+        )
+
+        # Eyes (whites)
         pygame.draw.circle(screen, WHITE, (player_draw.x + 18, player_draw.y + 18), 6)
         pygame.draw.circle(screen, WHITE, (player_draw.x + 42, player_draw.y + 18), 6)
 
- # Obstacles
+        # Eyes (pupils)
+        pygame.draw.circle(screen, BLACK, (player_draw.centerx - 5, player_draw.y + 16), 2)
+        pygame.draw.circle(screen, BLACK, (player_draw.centerx + 5, player_draw.y + 16), 2)
+
+          # Obstacles
         for obstacle in obstacles:
             pygame.draw.rect(screen, RED, obstacle, border_radius=10)
-
-# Bad items
+ 
+        # Bad items
         for bad in bad_items:
             pygame.draw.circle(screen, PURPLE, bad.center, 20)
-
-# Good items
+            pygame.draw.circle(screen, WHITE, bad.center, 6)
+ 
+        # Good items
         for good in good_items:
             pygame.draw.circle(screen, GREEN, good.center, 20)
-
-
+            pygame.draw.circle(screen, WHITE, good.center, 6)
+ 
+        # Score
+        score += 1
+        score_text = font.render(f"Score: {score}", True, WHITE)
+        screen.blit(score_text, (20, 20))
